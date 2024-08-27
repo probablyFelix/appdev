@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcu</title>
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .calculator {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td {
+            width: 25%;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s;
+        }
+
+        td:hover {
+            background-color: #e0e0e0;
+        }
+
+        .screen {
+            width: 100%;
+            height: 60px;
+            font-size: 24px;
+            text-align: right;
+            padding-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            height: 100%;
+            font-size: 24px;
+            background-color: #ff4d4d;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #e04343;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <table border="1">
+            <tr>
+                <td colspan="3"><input type="text" class="screen" value=""></td>
+                <td><button onclick="reset()">C</button></td>
+            </tr>
+            <tr>
+                <td onclick="appendNumber(7)">7</td>
+                <td onclick="appendNumber(8)">8</td>
+                <td onclick="appendNumber(9)">9</td>
+                <td onclick="setOperation('/')">/</td>
+            </tr>
+            <tr>
+                <td onclick="appendNumber(4)">4</td>
+                <td onclick="appendNumber(5)">5</td>
+                <td onclick="appendNumber(6)">6</td>
+                <td onclick="setOperation('*')">x</td>
+            </tr>
+            <tr>
+                <td onclick="appendNumber(1)">1</td>
+                <td onclick="appendNumber(2)">2</td>
+                <td onclick="appendNumber(3)">3</td>
+                <td onclick="setOperation('-')">-</td>
+            </tr>
+            <tr>
+                <td onclick="appendNumber(0)">0</td>
+                <td onclick="appendDecimal()">.</td>
+                <td onclick="calculateResult()">=</td>
+                <td onclick="setOperation('+')">+</td>
+            </tr>
+        </table>
+    </div>
+    
+</body>
+</html>
+<script>
+        let currentInput = '';
+        let previousInput = '';
+        let result = '';
+        let operator = null;
+
+        const screen = document.querySelector('.screen');
+
+        function appendNumber(number) {
+            if (currentInput === '' && number !== '.') {
+                currentInput = number.toString();
+            } else {
+                currentInput += number.toString();
+            }
+            updateScreen();
+        }
+
+        function appendDecimal() {
+            if (!currentInput.includes('.')) {
+                currentInput += '.';
+            }
+            updateScreen();
+        }
+
+        function setOperation(op) {
+            if (currentInput === '') return;
+            if (previousInput !== '') {
+                calculateResult();
+            }
+            operator = op;
+            previousInput = currentInput;
+            currentInput = '';
+        }
+
+        function calculateResult() {
+            if (!operator || currentInput === '' || previousInput === ''){
+                screen.value = 'Error';
+                return;
+            }
+
+            const prev = parseFloat(previousInput);
+            const curr = parseFloat(currentInput);
+
+            let result = 0;
+            switch (operator) {
+                case '+':
+                    result = prev + curr;
+                    break;
+                case '-':
+                    result = prev - curr;
+                    break;
+                case '*':
+                    result = prev * curr;
+                    break;
+                case '/':
+                    result = prev / curr;
+                    break;
+                default:
+                    return;
+            }
+            
+            currentInput = result.toString();
+            updateScreen();
+        }
+
+        function reset() {
+            currentInput = '';
+            previousInput = '';
+            operator = null;
+            updateScreen();
+        }
+
+        function updateScreen() {
+            screen.value = currentInput;
+        }
+    </script>
